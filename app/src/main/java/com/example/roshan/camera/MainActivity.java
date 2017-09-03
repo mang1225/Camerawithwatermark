@@ -43,8 +43,7 @@ public class MainActivity extends Activity {
   private static final String IMAGE_DIRECTORY_NAME = "WaterMark Camera";
   Uri source1;
 
-  @Override
-  protected void onCreate(Bundle savedInstanceState) {
+  @Override protected void onCreate(Bundle savedInstanceState) {
     super.onCreate(savedInstanceState);
     setContentView(R.layout.activity_main);
 
@@ -58,18 +57,15 @@ public class MainActivity extends Activity {
 
     btnLoadImage.setOnClickListener(new OnClickListener() {
 
-      @Override
-      public void onClick(View arg0) {
-        Intent intent = new Intent(Intent.ACTION_PICK,
-            android.provider.MediaStore.Images.Media.EXTERNAL_CONTENT_URI);
+      @Override public void onClick(View arg0) {
+        Intent intent = new Intent(Intent.ACTION_PICK, android.provider.MediaStore.Images.Media.EXTERNAL_CONTENT_URI);
         startActivityForResult(intent, RQS_IMAGE1);
       }
     });
 
     btn_captureiamge.setOnClickListener(new OnClickListener() {
 
-      @Override
-      public void onClick(View arg0) {
+      @Override public void onClick(View arg0) {
         fromCam = true;
         Intent intent = new Intent(MediaStore.ACTION_IMAGE_CAPTURE);
         source1 = getOutputMediaFileUri(MEDIA_TYPE_IMAGE);
@@ -80,23 +76,20 @@ public class MainActivity extends Activity {
 
     save.setOnClickListener(new OnClickListener() {
 
-      @Override
-      public void onClick(View v) {
+      @Override public void onClick(View v) {
         imageResult.setDrawingCacheEnabled(true);
         imageResult.buildDrawingCache();
         Bitmap bm = imageResult.getDrawingCache();
 
         OutputStream fOut = null;
         try {
-          File root = new File(Environment.getExternalStorageDirectory()
-              + File.separator + "Edit_Image" + File.separator);
+          File root = new File(Environment.getExternalStorageDirectory() + File.separator + "Edit_Image" + File.separator);
           root.mkdirs();
           File sdImageMainDirectory = new File(root, File.separator + "image" + System.currentTimeMillis() + ".jpg");
           source1 = Uri.fromFile(sdImageMainDirectory);
           fOut = new FileOutputStream(sdImageMainDirectory);
         } catch (Exception e) {
-          Toast.makeText(MainActivity.this, "Error occured. Please try again later.",
-              Toast.LENGTH_SHORT).show();
+          Toast.makeText(MainActivity.this, "Error occured. Please try again later.", Toast.LENGTH_SHORT).show();
         }
         try {
           bm.compress(Bitmap.CompressFormat.PNG, 100, fOut);
@@ -104,15 +97,13 @@ public class MainActivity extends Activity {
           fOut.close();
         } catch (Exception e) {
         }
-        Toast.makeText(MainActivity.this, "Image is saved.",
-            Toast.LENGTH_SHORT).show();
+        Toast.makeText(MainActivity.this, "Image is saved.", Toast.LENGTH_SHORT).show();
       }
     });
 
     btnProcessing.setOnClickListener(new OnClickListener() {
 
-      @Override
-      public void onClick(View v) {
+      @Override public void onClick(View v) {
 
         if (source1 != null) {
 
@@ -120,41 +111,26 @@ public class MainActivity extends Activity {
             Bitmap processedBitmap = ProcessingBitmap();
             if (processedBitmap != null) {
               imageResult.setImageBitmap(processedBitmap);
-              Toast.makeText(getApplicationContext(),
-                  "Done",
-                  Toast.LENGTH_LONG).show();
-
+              Toast.makeText(getApplicationContext(), "Done", Toast.LENGTH_LONG).show();
             } else {
-              Toast.makeText(getApplicationContext(),
-                  "Select  image!",
-                  Toast.LENGTH_LONG).show();
+              Toast.makeText(getApplicationContext(), "Select  image!", Toast.LENGTH_LONG).show();
             }
-
           } else {
             Bitmap processedBitmap = ProcessingBitmap1();
             if (processedBitmap != null) {
               imageResult.setImageBitmap(processedBitmap);
-              Toast.makeText(getApplicationContext(),
-                  "Done",
-                  Toast.LENGTH_LONG).show();
-
+              Toast.makeText(getApplicationContext(), "Done", Toast.LENGTH_LONG).show();
             } else {
-              Toast.makeText(getApplicationContext(),
-                  "Select  image!",
-                  Toast.LENGTH_LONG).show();
+              Toast.makeText(getApplicationContext(), "Select  image!", Toast.LENGTH_LONG).show();
             }
-
           }
-
         }
         fromCam = false;
       }
     });
-
   }
 
-  @Override
-  protected void onActivityResult(int requestCode, int resultCode, Intent data) {
+  @Override protected void onActivityResult(int requestCode, int resultCode, Intent data) {
     super.onActivityResult(requestCode, resultCode, data);
     if (resultCode == RESULT_OK) {
       switch (requestCode) {
@@ -164,8 +140,7 @@ public class MainActivity extends Activity {
           try {
 
             System.out.println("Bitmap path = " + source1.getPath());
-            final Bitmap bm1 = BitmapFactory.decodeStream(
-                getContentResolver().openInputStream(source1));
+            final Bitmap bm1 = BitmapFactory.decodeStream(getContentResolver().openInputStream(source1));
 
             imageResult.setImageBitmap(bm1);
           } catch (NullPointerException e) {
@@ -185,8 +160,7 @@ public class MainActivity extends Activity {
             // images
             options.inSampleSize = 8;
             System.out.println("Bitmap path = " + source1.getPath());
-            final Bitmap bm1 = BitmapFactory.decodeStream(
-                getContentResolver().openInputStream(source1));
+            final Bitmap bm1 = BitmapFactory.decodeStream(getContentResolver().openInputStream(source1));
 
             imageResult.setImageBitmap(bm1);
           } catch (NullPointerException e) {
@@ -204,8 +178,7 @@ public class MainActivity extends Activity {
     Bitmap newBitmap = null;
 
     try {
-      bm1 = BitmapFactory.decodeStream(
-          getContentResolver().openInputStream(source1));
+      bm1 = BitmapFactory.decodeStream(getContentResolver().openInputStream(source1));
 
       Config config = bm1.getConfig();
       if (config == null) {
@@ -229,19 +202,12 @@ public class MainActivity extends Activity {
         Rect rectText = new Rect();
         paintText.getTextBounds(captionString, 0, captionString.length(), rectText);
 
-        newCanvas.drawText(captionString,
-            (bm1.getWidth() / 2), bm1.getHeight() / 2, paintText);
+        newCanvas.drawText(captionString, (bm1.getWidth() / 2), bm1.getHeight() / 2, paintText);
 
-        Toast.makeText(getApplicationContext(),
-            "drawText: " + captionString,
-            Toast.LENGTH_LONG).show();
-
+        Toast.makeText(getApplicationContext(), "drawText: " + captionString, Toast.LENGTH_LONG).show();
       } else {
-        Toast.makeText(getApplicationContext(),
-            "caption empty!",
-            Toast.LENGTH_LONG).show();
+        Toast.makeText(getApplicationContext(), "caption empty!", Toast.LENGTH_LONG).show();
       }
-
     } catch (FileNotFoundException e) {
       // TODO Auto-generated catch block
       e.printStackTrace();
@@ -255,8 +221,7 @@ public class MainActivity extends Activity {
     Bitmap newBitmap = null;
 
     try {
-      bm1 = BitmapFactory.decodeStream(
-          getContentResolver().openInputStream(source1));
+      bm1 = BitmapFactory.decodeStream(getContentResolver().openInputStream(source1));
 
       Config config = bm1.getConfig();
       if (config == null) {
@@ -280,19 +245,12 @@ public class MainActivity extends Activity {
         Rect rectText = new Rect();
         paintText.getTextBounds(captionString, 0, captionString.length(), rectText);
 
-        newCanvas.drawText(captionString,
-            200, bm1.getHeight() / 2, paintText);
+        newCanvas.drawText(captionString, 200, bm1.getHeight() / 2, paintText);
 
-        Toast.makeText(getApplicationContext(),
-            "drawText: " + captionString,
-            Toast.LENGTH_LONG).show();
-
+        Toast.makeText(getApplicationContext(), "drawText: " + captionString, Toast.LENGTH_LONG).show();
       } else {
-        Toast.makeText(getApplicationContext(),
-            "caption empty!",
-            Toast.LENGTH_LONG).show();
+        Toast.makeText(getApplicationContext(), "caption empty!", Toast.LENGTH_LONG).show();
       }
-
     } catch (FileNotFoundException e) {
       // TODO Auto-generated catch block
       e.printStackTrace();
@@ -300,7 +258,6 @@ public class MainActivity extends Activity {
 
     return newBitmap;
   }
-
 
   /* handler helper
 
@@ -315,16 +272,12 @@ public class MainActivity extends Activity {
   private static File getOutputMediaFile(int type) {
 
     // External sdcard location
-    File mediaStorageDir = new File(
-        Environment
-            .getExternalStoragePublicDirectory(Environment.DIRECTORY_PICTURES),
-        IMAGE_DIRECTORY_NAME);
+    File mediaStorageDir = new File(Environment.getExternalStoragePublicDirectory(Environment.DIRECTORY_PICTURES), IMAGE_DIRECTORY_NAME);
 
     // Create the storage directory if it does not exist
     if (!mediaStorageDir.exists()) {
       if (!mediaStorageDir.mkdirs()) {
-        Log.d(IMAGE_DIRECTORY_NAME, "Oops! Failed create "
-            + IMAGE_DIRECTORY_NAME + " directory");
+        Log.d(IMAGE_DIRECTORY_NAME, "Oops! Failed create " + IMAGE_DIRECTORY_NAME + " directory");
         return null;
       }
     }
@@ -333,9 +286,7 @@ public class MainActivity extends Activity {
 
     File mediaFile;
     if (type == MEDIA_TYPE_IMAGE) {
-      mediaFile = new File(mediaStorageDir.getPath() + File.separator
-          + "Image_" + System.currentTimeMillis() + ".jpg");
-
+      mediaFile = new File(mediaStorageDir.getPath() + File.separator + "Image_" + System.currentTimeMillis() + ".jpg");
     } else {
       return null;
     }
@@ -343,14 +294,12 @@ public class MainActivity extends Activity {
     return mediaFile;
   }
 
-  @Override
-  public void onBackPressed() {
+  @Override public void onBackPressed() {
     editTextCaption.setText("");
     this.finishAffinity();
   }
 
-  @Override
-  protected void onSaveInstanceState(Bundle outState) {
+  @Override protected void onSaveInstanceState(Bundle outState) {
     super.onSaveInstanceState(outState);
 
     // save file url in bundle as it will be null on scren orientation
@@ -358,13 +307,10 @@ public class MainActivity extends Activity {
     outState.putParcelable("file_uri", source1);
   }
 
-  @Override
-  protected void onRestoreInstanceState(Bundle savedInstanceState) {
+  @Override protected void onRestoreInstanceState(Bundle savedInstanceState) {
     super.onRestoreInstanceState(savedInstanceState);
 
     // get the file url
     source1 = savedInstanceState.getParcelable("file_uri");
   }
-
-
 }
